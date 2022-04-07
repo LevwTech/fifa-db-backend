@@ -3,5 +3,8 @@
     "express": "^4.17.3",
     "mysql": "^2.18.1",
     "nodemon": "^2.0.15"
+  },
+  "scripts": {
+    "start": "nodemon index.js"
   }
 }
