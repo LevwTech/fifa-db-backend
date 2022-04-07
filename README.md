@@ -1,6 +1,6 @@
 # fifa-db-backend
 
-Back of Fifa football management system for database project
+Backend of Fifa football management system for database project
 
 To Run the App first install MySql
 create connection with
