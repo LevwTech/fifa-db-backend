@@ -1,7 +1,28 @@
 const express = require("express");
 const app = express();
 const cors = require("cors");
-
+const multer = require("multer");
+app.use(express.static("uploads")); // serving images folder publicly
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, "./uploads/");
+  },
+  filename: function (req, file, cb) {
+    cb(null, Date.now() + file.originalname);
+  },
+});
+const upload = multer({
+  storage: storage,
+  limits: {
+    fileSize: 1024 * 1024 * 100, // only accept  till 100  mbs
+  },
+  fileFilter(req, file, cb) {
+    if (!file.originalname.match(/\.(jpe?g|png|PNG|JPG|JPEG|gif|bmp)$/)) {
+      return cb(new Error("File must be an Image")); //
+    }
+    cb(undefined, true);
+  },
+});
 app.use(cors({ origin: "*" }));
 
 app.use(express.json());
@@ -20,10 +41,11 @@ connection.connect(() => {
 });
 
 // Here are all the Creates
-app.post("/player", (req, res) => {
-  connection.query(
+app.post("/player", upload.single("image"), async (req, res) => {
+  const image = `http://localhost:3000/${req.file.filename}`;
+  const playerImage = connection.query(
     `INSERT INTO player(Pace, Dribbling, Physical, Passing, Shooting, Defending, Pname, Image, CID, CountryName)
-      VALUES (${req.body.pace},${req.body.dribbling},${req.body.physical},${req.body.passing},${req.body.shooting},${req.body.defending},'${req.body.pname}','${req.body.image}','${req.body.cid}','${req.body.countryname}');`,
+      VALUES (${req.body.pace},${req.body.dribbling},${req.body.physical},${req.body.passing},${req.body.shooting},${req.body.defending},'${req.body.pname}','${image}','${req.body.cid}','${req.body.countryname}');`,
     function (error, results, fields) {
       if (error) throw error;
       res.send("inserted");

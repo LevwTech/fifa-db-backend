@@ -16,4 +16,4 @@ same with triggers.sql and assertions.sql
 now you can start Creating Tuples in that order:
 Country > League > Club > Manager > Player
 
-Run Node with npm run start and React with npm start
+Run Node with npm run start (at port 3000 so serving images work fine) and React with npm start (at port 3001)
