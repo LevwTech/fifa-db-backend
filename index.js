@@ -1,5 +1,9 @@
 const express = require("express");
 const app = express();
+const cors = require("cors");
+
+app.use(cors({ origin: "*" }));
+
 app.use(express.json());
 const mysql = require("mysql");
 const connection = mysql.createConnection({
@@ -9,10 +13,10 @@ const connection = mysql.createConnection({
   database: "fifa",
 });
 
-connection.connect();
-
-app.listen(process.env.PORT || 3000, () => {
-  console.log("server started on port 3000");
+connection.connect(() => {
+  app.listen(process.env.PORT || 3000, () => {
+    console.log("server started on port 3000");
+  });
 });
 
 // Here are all the Creates
@@ -22,7 +26,7 @@ app.post("/player", (req, res) => {
       VALUES (${req.body.pace},${req.body.dribbling},${req.body.physical},${req.body.passing},${req.body.shooting},${req.body.defending},'${req.body.pname}','${req.body.image}','${req.body.cid}','${req.body.countryname}');`,
     function (error, results, fields) {
       if (error) throw error;
-      console.log("inserted");
+      res.send("inserted");
     }
   );
 });
@@ -103,3 +107,79 @@ app.get("/countries", (req, res) => {
 });
 
 // Complex Queries
+app.get("/complex1", (req, res) => {
+  const {
+    paceMin = 0,
+    dribblingMin = 0,
+    physicalMin = 0,
+    passingMin = 0,
+    shootingMin = 0,
+    defendingMin = 0,
+    paceMax = 100,
+    dribblingMax = 100,
+    physicalMax = 100,
+    passingMax = 100,
+    shootingMax = 100,
+    defendingMax = 100,
+  } = req.query;
+
+  connection.query(
+    `SELECT *, x.count from player,
+    (
+      select count(*) as count FROM player
+      WHERE (
+        player.Pace > ${paceMin}
+        AND player.Dribbling > ${dribblingMin}
+        AND player.Physical > ${physicalMin}
+        AND player.Passing > ${passingMin}
+        AND player.Shooting > ${shootingMin}
+        AND player.Defending > ${defendingMin}
+        AND player.Pace < ${paceMax}
+        AND player.Dribbling < ${dribblingMax}
+        AND player.Physical < ${physicalMax}
+        AND player.Passing < ${passingMax}
+        AND player.Shooting < ${shootingMax}
+        AND player.Defending < ${defendingMax}
+      )
+      ) as x
+    WHERE (
+      player.Pace > ${paceMin}
+      AND player.Dribbling > ${dribblingMin}
+      AND player.Physical > ${physicalMin}
+      AND player.Passing > ${passingMin}
+      AND player.Shooting > ${shootingMin}
+      AND player.Defending > ${defendingMin}
+      AND player.Pace < ${paceMax}
+      AND player.Dribbling < ${dribblingMax}
+      AND player.Physical < ${physicalMax}
+      AND player.Passing < ${passingMax}
+      AND player.Shooting < ${shootingMax}
+      AND player.Defending < ${defendingMax}
+      )`,
+    function (error, results, fields) {
+      if (error) throw error;
+      res.send({ players: results });
+    }
+  );
+});
+app.get("/club", (req, res) => {
+  const cid = req.query.cid;
+  connection.query(
+    `SELECT * FROM player,
+    (select ClubName FROM club) as x,
+    (
+      select AVG(Pace) as clubPace,
+      AVG(Dribbling) as clubDribbling,
+      AVG(Physical) as clubPhysical,
+      AVG(Passing) as clubPassing,
+      AVG(Shooting) as clubShooting,
+      AVG(Defending) as clubDefending
+      FROM player where player.CID=${cid}
+    ) as y
+    WHERE player.CID = ${cid}`,
+    function (error, results, fields) {
+      if (error) throw error;
+      res.send(results);
+    }
+  );
+});

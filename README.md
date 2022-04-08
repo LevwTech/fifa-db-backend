@@ -10,7 +10,8 @@ password: "Levw1234"
 database: "fifa"
 
 create new schema called fifa, right click and make it default
-create the sql query file and insert the sql code and run it
+create the fifa.sql query file and insert the sql code and run it
+same with triggers.sql and assertions.sql
 
 now you can start Creating Tuples in that order:
 Country > League > Club > Manager > Player
