@@ -122,7 +122,8 @@ app.get("/complex1", (req, res) => {
     shootingMax = 100,
     defendingMax = 100,
   } = req.query;
-
+  // This Query takes from the endpoint all the minimum and maximum of the 6 stats and
+  // returns all the players withthon that range of stats and their count
   connection.query(
     `SELECT *, x.count from player,
     (
@@ -162,6 +163,8 @@ app.get("/complex1", (req, res) => {
     }
   );
 });
+// This Query takes the club id from the endpoint and selects all the players in this club
+// Most importantly it also returns Average stats of all players as the (Club Stats)
 app.get("/club", (req, res) => {
   const cid = req.query.cid;
   connection.query(
