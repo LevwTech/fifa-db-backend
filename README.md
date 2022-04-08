@@ -5,7 +5,7 @@ Backend of Fifa football management system for database project
 To Run the App first install MySql
 create connection with
 host: "localhost"
-user: "root",
+user: "root"
 password: "Levw1234"
 database: "fifa"
 
