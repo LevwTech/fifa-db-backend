@@ -64,6 +64,7 @@ app.post("/club", (req, res) => {
 });
 
 app.post("/country", (req, res) => {
+  console.log(req.body);
   connection.query(
     `INSERT INTO country(CountryName, Continent)
       VALUES ('${req.body.country}','${req.body.continent}');`,
@@ -145,7 +146,7 @@ app.get("/complex1", (req, res) => {
     defendingMax = 100,
   } = req.query;
   // This Query takes from the endpoint all the minimum and maximum of the 6 stats and
-  // returns all the players withthon that range of stats and their count
+  // returns all the players withthin that range of stats and their count
   connection.query(
     `SELECT *, x.count from player,
     (
