@@ -3,6 +3,7 @@ const app = express();
 const cors = require("cors");
 const multer = require("multer");
 app.use(express.static("uploads")); // serving images folder publicly
+var bodyParser = require("body-parser");
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, "./uploads/");
@@ -25,9 +26,13 @@ const upload = multer({
 });
 app.use(cors({ origin: "*" }));
 
-app.use(express.json());
+// app.use(express.json());
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
+
 const mysql = require("mysql");
 const connection = mysql.createConnection({
+  // no need to set env vars
   host: "localhost",
   user: "root",
   password: "Levw1234",
@@ -64,7 +69,6 @@ app.post("/club", (req, res) => {
 });
 
 app.post("/country", (req, res) => {
-  console.log(req.body);
   connection.query(
     `INSERT INTO country(CountryName, Continent)
       VALUES ('${req.body.country}','${req.body.continent}');`,
@@ -153,32 +157,32 @@ app.get("/complex1", (req, res) => {
       select count(*) as count FROM player
       WHERE (
         player.Pace > ${paceMin}
-        AND player.Dribbling > ${dribblingMin}
-        AND player.Physical > ${physicalMin}
-        AND player.Passing > ${passingMin}
-        AND player.Shooting > ${shootingMin}
-        AND player.Defending > ${defendingMin}
-        AND player.Pace < ${paceMax}
-        AND player.Dribbling < ${dribblingMax}
-        AND player.Physical < ${physicalMax}
-        AND player.Passing < ${passingMax}
-        AND player.Shooting < ${shootingMax}
-        AND player.Defending < ${defendingMax}
+        AND player.Dribbling >= ${dribblingMin}
+        AND player.Physical >= ${physicalMin}
+        AND player.Passing >= ${passingMin}
+        AND player.Shooting >= ${shootingMin}
+        AND player.Defending >= ${defendingMin}
+        AND player.Pace <= ${paceMax}
+        AND player.Dribbling <= ${dribblingMax}
+        AND player.Physical <= ${physicalMax}
+        AND player.Passing <= ${passingMax}
+        AND player.Shooting <= ${shootingMax}
+        AND player.Defending <= ${defendingMax}
       )
       ) as x
     WHERE (
-      player.Pace > ${paceMin}
-      AND player.Dribbling > ${dribblingMin}
-      AND player.Physical > ${physicalMin}
-      AND player.Passing > ${passingMin}
-      AND player.Shooting > ${shootingMin}
-      AND player.Defending > ${defendingMin}
-      AND player.Pace < ${paceMax}
-      AND player.Dribbling < ${dribblingMax}
-      AND player.Physical < ${physicalMax}
-      AND player.Passing < ${passingMax}
-      AND player.Shooting < ${shootingMax}
-      AND player.Defending < ${defendingMax}
+      player.Pace >= ${paceMin}
+      AND player.Dribbling >= ${dribblingMin}
+      AND player.Physical >= ${physicalMin}
+      AND player.Passing >= ${passingMin}
+      AND player.Shooting >= ${shootingMin}
+      AND player.Defending >= ${defendingMin}
+      AND player.Pace <= ${paceMax}
+      AND player.Dribbling <= ${dribblingMax}
+      AND player.Physical <= ${physicalMax}
+      AND player.Passing <= ${passingMax}
+      AND player.Shooting <= ${shootingMax}
+      AND player.Defending <= ${defendingMax}
       )`,
     function (error, results, fields) {
       if (error) throw error;
