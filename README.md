@@ -11,9 +11,12 @@ database: "fifa"
 
 create new schema called fifa, right click and make it default
 create the fifa.sql query file and insert the sql code and run it
-same with triggers.sql and assertions.sql
+same with triggers.sql and assertions.sql 
+(sql file for each is in sql folder)
+
+Run Node with npm run start (at port 3000 so serving images work fine) and React with npm start (at port 3001)
 
 now you can start Creating Tuples in that order:
 Country > League > Club > Manager > Player
 
-Run Node with npm run start (at port 3000 so serving images work fine) and React with npm start (at port 3001)
+
