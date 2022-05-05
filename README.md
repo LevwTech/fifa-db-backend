@@ -19,17 +19,6 @@ Run Node with npm start (at port 3000 so serving images work fine) and React wit
 now you can start Creating Tuples in that order:
 Country > League > Club > Manager > Player
 
-Backend of Fifa football management system for database project
-
-To Run the App first install MySql create connection with host: "localhost" user: "root" password: "Levw1234" database: "fifa"
-
-create new schema called fifa, right click and make it default create the fifa.sql query file and insert the sql code and run it same with triggers.sql and assertions.sql (sql file for each is in sql folder)
-
-Run Node with npm start (at port 3000 so serving images work fine) and React with npm start (at port 3001)
-
-now you can start Creating Tuples in that order: Country > League > Club > Manager > Player
-
-
 Requirments and Specifications
 The Club entity refers to the sports club which all other entities branch from. It has a unique ID ‘CID’, ClubName, and an establish date. The Club also has a composite attribute referring to its detailed Address (street, city, zip code). Each Club has a manager who manages the Club and Players who play for the club.
 
